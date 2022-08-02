@@ -9,11 +9,10 @@ self.addEventListener('install', function (event) {
         cache.addAll([
           '/Project/',
           '/Project/index.html',
-          '/Project/style.css',
+          '/Project/css/styles.css',
           '/Project/manifest.json',
-          '/Project/serviceProvider.js',
-          '/Project/src/images/logos/android-chrome-192x192.png',
-          '/Project/script.js',
+          '/Project/icons/android-chrome-192x192.png',
+          '/Project/js/script.js',
         ]);
     })
   )
