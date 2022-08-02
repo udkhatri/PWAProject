@@ -13,6 +13,7 @@ self.addEventListener('install', function (event) {
           '/Project/manifest.json',
           '/Project/icons/android-chrome-192x192.png',
           '/Project/js/script.js',
+          '/Project/pages/'
         ]);
     })
   )

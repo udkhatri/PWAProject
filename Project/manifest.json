@@ -1,7 +1,7 @@
 {
     "name": "PWA Project",
     "short_name": "Project",
-    "start_url": "/",
+    "start_url": "/Project/",
     "display" : "Standalone",
     "id": "/",
     "theme_color": "#2f2f2f",
