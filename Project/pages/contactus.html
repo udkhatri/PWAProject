@@ -1,0 +1,127 @@
+
+<ons-page id="contactus">
+    <ons-toolbar>
+        <div class="left"><ons-back-button>Settings</ons-back-button></div>
+        <div class="center">Feedback</div>
+      </ons-toolbar>
+  
+      <ons-page id="forms-page">
+        <ons-list>
+          <ons-list-header>Your Information</ons-list-header>
+          <ons-list-item class="input-items">
+            <div class="left">
+              <ons-icon icon="md-face" class="list-item__icon"></ons-icon>
+            </div>
+            <label class="center">
+            <ons-input id="name-input" float maxlength="20" placeholder="Name"></ons-input>
+          </label>
+          </ons-list-item>
+          
+    
+          <ons-list-header>Feedback</ons-list-header>
+          <ons-list-item>
+            <label class="center" for="switch1">
+              Switch<span id="switch-status">&nbsp;(on)</span>
+            </label>
+            <div class="right">
+              <ons-switch id="model-switch" input-id="switch1" checked="true"></ons-switch>
+            </div>
+          </ons-list-item>
+          <ons-list-item>
+            <label id="enabled-label" class="center" for="switch2">
+              Enabled switch
+            </label>
+            <div class="right">
+              <ons-switch id="disabled-switch" input-id="switch2"></ons-switch>
+            </div>
+          </ons-list-item>
+    
+          <ons-list-header>What should we add next?</ons-list-header>
+          <ons-list-item>
+            <div class="center">
+              <ons-select id="select-input" style="width: 120px">
+                <option value="Vue">
+                 Stories
+                </option>
+                <option value="React">
+                  Short Videos
+                </option>
+                <option value="Angular">
+                  Option to add coder pic
+                </option>
+                <option value="Angular">
+                  Option to follow users
+                </option>
+                <option value="Angular">
+                 Messaging
+                </option>
+              </ons-select>
+    
+            </div>
+          </ons-list-item>
+    
+          <ons-list-header>How likely would you refer this app?</ons-list-header>
+          
+          <ons-list>
+            <ons-list-item tappable>
+              <label class="left">
+                <ons-radio name="color" input-id="radio-1" checked></ons-radio>
+              </label>
+              <label for="radio-1" class="center">
+                Most Likely
+              </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+              <label class="left">
+                <ons-radio name="color" input-id="radio-2"></ons-radio>
+              </label>
+              <label for="radio-2" class="center">
+               Maybe
+              </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+              <label class="left">
+                <ons-radio name="color" input-id="radio-2"></ons-radio>
+              </label>
+              <label for="radio-2" class="center">
+               Never
+              </label>
+            </ons-list-item>
+          </ons-list>
+    
+          <ons-list-header>Which of the following features you like?</ons-list-header>
+          <ons-list-item tappable>
+            <label class="left">
+              <ons-checkbox class="checkbox-color" input-id="checkbox-0" value="Red"></ons-checkbox>
+            </label>
+            <label class="center" for="checkbox-0">
+              Likes
+            </label>
+          </ons-list-item>
+          <ons-list-item tappable>
+            <label class="left">
+              <ons-checkbox class="checkbox-color" input-id="checkbox-1" value="Green" ></ons-checkbox>
+            </label>
+            <label class="center" for="checkbox-1">
+              Comments
+            </label>
+          </ons-list-item>
+          <ons-list-item tappable>
+            <label class="left">
+              <ons-checkbox class="checkbox-color" input-id="checkbox-2" value="Blue" ></ons-checkbox>
+            </label>
+            <label class="center" for="checkbox-2">
+              Share
+            </label>
+          </ons-list-item>
+          <ons-list-header>General Feedback</ons-list-header>
+          <ons-list-item class="input-items">
+            <label class="center">
+            <ons-input id="name-input" float maxlength="20" placeholder="Your Feedback"></ons-input>
+          </label>
+          </ons-list-item>
+          <p style="text-align: center">
+            <ons-button onclick="goBack()">Submit</ons-button>
+          </p>
+        
+</ons-page>

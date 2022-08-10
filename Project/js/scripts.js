@@ -2,7 +2,7 @@ const myNavigator = document.getElementById('my-navigator');
 // Service Worker registration
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
-    .register('/service-worker.js')
+    .register('./service-worker.js')
     .catch(function (error) {
       console.log('Service Worker failed to register:', error);
     });
@@ -11,12 +11,20 @@ else {
   console.log('Service Worker is not supported by this browser.');
 }
 
+const login = () => {
+    myNavigator.resetToPage('pages/nav.html');
+}
+
+document.addEventListener('prechange', function(event) {
+  document.querySelector('ons-toolbar .center')
+    .innerHTML = event.tabItem.getAttribute('label');
+});
 function onSignInClick(){
-  myNavigator.pushPage('pages/sign-in.html');
+  myNavigator.pushPage('pages/login.html');
 }
 
 function onSignUpClick(){
-  myNavigator.pushPage('pages/sign-up.html');
+  myNavigator.pushPage('pages/signup.html');
 }
 
 function onGuestClick(){
@@ -26,4 +34,25 @@ function onGuestClick(){
   console.log('Device: ', device);
 
   ons.notification.alert('My device is ' + device);
+}
+
+
+const pushPage = () => {
+  const navigator = document.querySelector('#navigator')
+  navigator.pushPage('contactus.html', {data: {title: 'Page 2'}});
+};
+const goBack = () => {
+  const navigator = document.querySelector('#navigator')
+  navigator.popPage();
+}
+const switchChange = () =>{
+  const switchh = document.querySelector('#switch');
+  if(switchh.checked){
+    document.querySelector('#theme').setAttribute('href', 'css/css/dark-onsen-css-components.css');
+    document.querySelector('#themeMeta').setAttribute('content', '#000')
+  }
+  else{
+    document.querySelector('#theme').setAttribute('href', 'css/css/onsen-css-components.css');
+    document.querySelector('#themeMeta').setAttribute('content', '#fff')
+  }
 }
