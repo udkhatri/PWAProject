@@ -33,3 +33,65 @@ body{
     background-color: white;
     padding: 20px;
  }
+ .searchBar{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding:10px;
+    margin:10px;
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 9px;
+ }
+ .head{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding:20px;
+    background-color: white;
+ }
+ .recipeNameContainer{
+    margin-left: 20px;
+ }
+ .contentItem{
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+ }
+ .FatNumber{
+    background-color: #FF8C8C;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    box-shadow: 1px 5px 6px rgba(186, 186, 186, 0.41);
+ }
+ .ProteinNumber{
+    background-color: #FFC49A;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    box-shadow: 1px 5px 6px rgba(186, 186, 186, 0.41);
+ }
+ .CarbsNumber{
+    background-color: #AFE5A6;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    box-shadow: 1px 5px 6px rgba(186, 186, 186, 0.41);
+ }
+ .CaloriesNumber{
+    background-color: #BFBFBF;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    box-shadow: 1px 5px 6px rgba(186, 186, 186, 0.41);
+ }

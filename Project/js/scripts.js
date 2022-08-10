@@ -38,12 +38,10 @@ function onGuestClick(){
 
 
 const pushPage = () => {
-  const navigator = document.querySelector('#navigator')
-  navigator.pushPage('contactus.html', {data: {title: 'Page 2'}});
+  myNavigator.pushPage('pages/recipe.html', {data: {title: 'Page 2'}});
 };
-const goBack = () => {
-  const navigator = document.querySelector('#navigator')
-  navigator.popPage();
+const logout = () => {
+  myNavigator.resetToPage('pages/welcome.html');
 }
 const switchChange = () =>{
   const switchh = document.querySelector('#switch');

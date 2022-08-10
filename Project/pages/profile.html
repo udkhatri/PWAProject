@@ -1,12 +1,30 @@
 <ons-page id="profile">
     <div class="center">
-        <p style="text-align: center;">
-            <img src="icons/apple-splash-1125-2436.jpg" alt="Onsen UI" class="profile_pic">
-          </p>
-    
+      <ons-list>
+        <ons-list-item>
+          <div class="left">
+            <ons-icon icon="ion-ios-moon" class="list-item__icon"></ons-icon>
+          </div>
+          <div class="center">
+            Dark Mode: 
+          </div>
+          <div class="right">
+            <ons-switch id= "switch" onchange="switchChange()"></ons-switch>
+          </div>
+        </ons-list-item>
+      </ons-list>
+       
+      <p style="text-align: center;">
+        <img src="icons/apple-splash-1125-2436.jpg" alt="Onsen UI" class="profile_pic">
+      </p>
     <h3 style="text-align: center;">
       Uday Khatri
     </h3>
+    <p style="text-align: center;">
+      <button class="button" style="align-self: center;" onclick="logout()">
+        Log out
+        </button>
+    </p>
   
 </div>
   </ons-page>
