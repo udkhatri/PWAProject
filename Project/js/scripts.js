@@ -1,6 +1,6 @@
-import Firebase from "../firebase.js";
-console.log("logging ");
-const firebase = new Firebase();
+// import Firebase from "../firebase.js";
+// console.log("logging ");
+// const firebase = new Firebase();
 const myNavigator = document.getElementById('my-navigator');
 // Service Worker registration
 if ('serviceWorker' in navigator) {
@@ -13,31 +13,31 @@ if ('serviceWorker' in navigator) {
 else {
   console.log('Service Worker is not supported by this browser.');
 }
-›
-document.getElementById('loginButton').addEventListener('click', login);
-const checkUser = () =>{
-  firebase.onAuthStateChanged(user => {
-    if(user){
-      console.log(user);
-      myNavigator.resetToPage('pages/nav.html');
-    }
-    else{
-      console.log('not logged in');
-      myNavigator.resetToPage('pages/welcome.html');
-    }
-  }
-  );
-}
 
-checkUser();
-const login = () => {
-    myNavigator.resetToPage('pages/nav.html');
-}
+// document.getElementById('loginButton').addEventListener('click', login);
+// const checkUser = () =>{
+//   firebase.onAuthStateChanged(user => {
+//     if(user){
+//       console.log(user);
+//       myNavigator.resetToPage('pages/nav.html');
+//     }
+//     else{
+//       console.log('not logged in');
+//       myNavigator.resetToPage('pages/welcome.html');
+//     }
+//   }
+//   );
+// }
 
-document.addEventListener('prechange', function(event) {
-  document.querySelector('ons-toolbar .center')
-    .innerHTML = event.tabItem.getAttribute('label');
-});
+// checkUser();
+// const login = () => {
+//     myNavigator.resetToPage('pages/nav.html');
+// }
+
+// document.addEventListener('prechange', function(event) {
+//   document.querySelector('ons-toolbar .center')
+//     .innerHTML = event.tabItem.getAttribute('label');
+// });
 function onSignInClick(){
   myNavigator.pushPage('pages/login.html');
 }
@@ -47,18 +47,13 @@ function onSignUpClick(){
 }
 
 function onGuestClick(){
-  console.log(ons);
-
-  const device = ons.platform.getMobileOS();
-  console.log('Device: ', device);
-
-  ons.notification.alert('My device is ' + device);
+  myNavigator.pushPage('pages/home.html')
 }
 
 
-const pushPage = () => {
-  myNavigator.pushPage('pages/recipe.html', {data: {title: 'Page 2'}});
-};
+// const pushPage = () => {
+//   myNavigator.pushPage('pages/recipe.html', {data: {title: 'Page 2'}});
+// };
 const logout = () => {
   myNavigator.resetToPage('pages/welcome.html');
 }

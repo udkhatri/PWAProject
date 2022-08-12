@@ -1,51 +1,107 @@
-
 <ons-page id="recipe">
-    <ons-toolbar>
-        <div class="left"><ons-back-button>back</ons-back-button></div>
-        <div class="center">Recipe name</div>
-      </ons-toolbar>
-  <div>
-    <div class="head">
-      <p style="text-align: center; size: 50px;">
-        <img src="icons/apple-splash-1125-2436.jpg" alt="Onsen UI" class="profile_pic">
-      </p>
-      <div class="recipeNameContainer">
-        <h1>Pasta</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis, sint fugiat. Repellendus nihil qui accusantium officiis esse distinctio tempore dicta a numquam doloremque incidunt dolore sit explicabo nostrum, maxime magnam!</p>
-      </div>
-      
-    </div>
-    <div class="head">
-      <div class="contentItem">
-        <div class="FatNumber">
-          <p style="font-weight: bold; color: white;">100</p>
-        </div>
-        <p>Fat</p>
-      </div>
-      <div class="contentItem">
-        <div class="ProteinNumber">
-          <p style="font-weight: bold; color: white;">100</p>
-        </div>
-        <p>Protein</p>
-      </div>
-      <div class="contentItem">
-        <div class="CarbsNumber">
-          <p style="font-weight: bold; color: white;">100</p>
-        </div>
-        <p>Carbs</p>
-      </div>
-      <div class="contentItem">
-        <div class="CaloriesNumber">
-          <p style="font-weight: bold; color: white;">100</p>
-        </div>
-        <p>Calories</p>
-      </div>
-    </div>
-    <div class="head">
-      <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias molestiae sed expedita ipsa repudiandae numquam natus deleniti, consectetur aliquid dolor nam distinctio obcaecati illo quas omnis consequuntur vitae nemo corrupti sit minus. Ratione aliquam repellendus, quo error, sed natus amet quis praesentium vitae dolore velit ab modi Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ex, incidunt voluptatum officiis necessitatibus quia eaque amet eveniet rem voluptas velit nostrum dolorem dicta ducimus corporis ullam provident enim ab? Labore optio dicta rem inventore quas, maxime tempore minima aspernatur itaque impedit placeat sit perspiciatis sed excepturi cum libero provident!
-      </p>
-    </div>
+
+  <script>  
+  const options = {
+	method: 'GET',
+	headers: {
+		'X-RapidAPI-Key': '8c3134a6e6msh40114e5b61fc300p13f380jsn0bc270040660',
+		'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+	}
+};
+const saveRecipe = (recipenumber, button) => {
+      addRecipeToGrid(recipenumber);
+      button.parentNode.parentNode.hideExpansion();
+    };
+
+    const appendRecipe = (recipenumber, name, image) => {
+      const list = document.querySelector('#recipe-list');
+      list.appendChild(ons.createElement(`
+        <ons-list-item expandable>
+          <img src=${image} style="width: 15%">
+          ${recipenumber} ${name}
+          <div class="expandable-content">
+            <ons-button onclick="saveRecipe(${recipenumber}, this)">Save</ons-button>
+          </div>
+        </ons-list-item>
+      `));
+    }
+
+    document.addEventListener('init', ({ target }) => {
+      if (target.matches('#recipe')) {
+        // local storage keys
+        const URL = 'recipe__url';
+        const PREFIX = 'recipe__';
+
+        let nextRecipenumber = 1;
+        let storedRecipe;
+
+        while ((storedRecipe = localStorage.getItem(PREFIX + nextRecipenumber)) !== null) {
+          console.log(`got ${storedRecipe} from local with key ${PREFIX + nextRecipenumber}`);
+          appendRecipe(nextRecipenumber, storedRecipe);
+          nextRecipenumber++;
+        }
+
+        if (!localStorage.getItem(URL)) {
+          localStorage.setItem(URL, 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=3');
+        }
+
+        const get = async () => {
+          // do the API call and get JSON response
+          const response = await fetch(localStorage.getItem(URL), options);
+          const json = await response.json();
+          console.log(json);
+          
+          
+          const newRecipe = json.recipes.map(e => e.title);
+          const newRecipeImage = json.recipes.map(e => e.image)
+          const myRecipe = json.recipes.map(e => e);
+          console.log('My recipe 1 ' + JSON.stringify(myRecipe[1]));
+          const list = document.querySelector('#recipe-list');
+          newRecipe.forEach((name, i) => {
+            image = newRecipeImage[i];
+            console.log(image);
+            if (image != undefined){
+              appendRecipe(nextRecipenumber, name, image);
+
+                const key = PREFIX + nextRecipenumber;
+                console.log(`Storing ${name} as ${key}`);
+                localStorage.setItem(key, name)
+                nextRecipenumber++;
+            }
+
+            
+
+          });
+
+          localStorage.setItem(URL, json.next);
+
+          // hide the spinner when all the pages have been loaded
+          if (!localStorage.getItem(URL)) {
+            document.querySelector('#after-list').style.display = 'none';
+          }
+        };
+
+        // get the first set of results as soon as the page is initialised
+        get();
+
+        // at the bottom of the list get the next set of results and append them
+        target.onInfiniteScroll = (done) => {
+          if (localStorage.getItem(URL)) {
+            setTimeout(() => {
+              get();
+              done();
+            }, 200);
+          }
+        };
+      }
+    });
+  </script>
+
+  <ons-list id="recipe-list">
+  </ons-list>
+
+  <div id="after-list" style="margin: 20px; text-align: center;">
+    <ons-icon icon="fa-spinner" size="26px" spin></ons-icon>
   </div>
-       
+
 </ons-page>
