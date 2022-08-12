@@ -13,12 +13,12 @@ const saveRecipe = (recipenumber, button) => {
       button.parentNode.parentNode.hideExpansion();
     };
 
-    const appendRecipe = (recipenumber, name, image) => {
+    const appendRecipe = (recipenumber, title, image) => {
       const list = document.querySelector('#recipe-list');
       list.appendChild(ons.createElement(`
         <ons-list-item expandable>
           <img src=${image} style="width: 15%">
-          ${recipenumber} ${name}
+          ${recipenumber} ${title}
           <div class="expandable-content">
             <ons-button onclick="saveRecipe(${recipenumber}, this)">Save</ons-button>
           </div>
@@ -34,49 +34,42 @@ const saveRecipe = (recipenumber, button) => {
 
         let nextRecipenumber = 1;
         let storedRecipe;
+        let recipeImage;
 
         while ((storedRecipe = localStorage.getItem(PREFIX + nextRecipenumber)) !== null) {
           console.log(`got ${storedRecipe} from local with key ${PREFIX + nextRecipenumber}`);
-          appendRecipe(nextRecipenumber, storedRecipe);
+          appendRecipe(nextRecipenumber, storedRecipe , recipeImage);
           nextRecipenumber++;
         }
 
-        if (!localStorage.getItem(URL)) {
-          localStorage.setItem(URL, 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=3');
+        if (!localStorage.getItem(URL), options) {
+          localStorage.setItem(URL, 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random');
         }
 
         const get = async () => {
           // do the API call and get JSON response
           const response = await fetch(localStorage.getItem(URL), options);
           const json = await response.json();
-          console.log(json);
+
+          const newRecipeTitle = json.recipes.map(e => e.title);
+          const recipeImage = json.recipes.map(e => e.image)
           
-          
-          const newRecipe = json.recipes.map(e => e.title);
-          const newRecipeImage = json.recipes.map(e => e.image)
-          const myRecipe = json.recipes.map(e => e);
-          console.log('My recipe 1 ' + JSON.stringify(myRecipe[1]));
           const list = document.querySelector('#recipe-list');
-          newRecipe.forEach((name, i) => {
-            image = newRecipeImage[i];
-            console.log(image);
-            if (image != undefined){
-              appendRecipe(nextRecipenumber, name, image);
+          newRecipeTitle.forEach((title, i) => {
 
-                const key = PREFIX + nextRecipenumber;
-                console.log(`Storing ${name} as ${key}`);
-                localStorage.setItem(key, name)
-                nextRecipenumber++;
-            }
+            image = recipeImage[i];
+            appendRecipe(nextRecipenumber, title , image);
 
-            
-
+            const key = PREFIX + nextRecipenumber;
+            console.log(`Storing ${title} as ${key}`);
+            localStorage.setItem(key, title)
+            nextRecipenumber++;
           });
 
-          localStorage.setItem(URL, json.next);
-
+          //localStorage.setItem(URL, 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random');
+          
           // hide the spinner when all the pages have been loaded
-          if (!localStorage.getItem(URL)) {
+          if (!localStorage.getItem(URL), options) {
             document.querySelector('#after-list').style.display = 'none';
           }
         };
@@ -86,7 +79,7 @@ const saveRecipe = (recipenumber, button) => {
 
         // at the bottom of the list get the next set of results and append them
         target.onInfiniteScroll = (done) => {
-          if (localStorage.getItem(URL)) {
+          if (!localStorage.getItem(URL), options) {
             setTimeout(() => {
               get();
               done();
@@ -95,6 +88,8 @@ const saveRecipe = (recipenumber, button) => {
         };
       }
     });
+
+   
   </script>
 
   <ons-list id="recipe-list">
