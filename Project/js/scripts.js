@@ -1,7 +1,8 @@
-// import Firebase from "../firebase.js";
-// console.log("logging ");
-// const firebase = new Firebase();
+import Firebase from "../firebase.js";
+console.log("logging ");
+const firebase = new Firebase();
 const myNavigator = document.getElementById('my-navigator');
+var userName = "Guest user"
 // Service Worker registration
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
@@ -13,31 +14,94 @@ if ('serviceWorker' in navigator) {
 else {
   console.log('Service Worker is not supported by this browser.');
 }
+setTimeout(() => {
+  // Timeout required for onsenUI
+  document.getElementById('loginButton').addEventListener('click', onSignInClick);
+  document.getElementById('signupButton').addEventListener('click', onSignUpClick);
+  document.getElementById('guestButton').addEventListener('click', anonymousLogin);
 
-// document.getElementById('loginButton').addEventListener('click', login);
-// const checkUser = () =>{
-//   firebase.onAuthStateChanged(user => {
-//     if(user){
-//       console.log(user);
-//       myNavigator.resetToPage('pages/nav.html');
-//     }
-//     else{
-//       console.log('not logged in');
-//       myNavigator.resetToPage('pages/welcome.html');
-//     }
-//   }
-//   );
-// }
+} , 1000);
 
-// checkUser();
-// const login = () => {
-//     myNavigator.resetToPage('pages/nav.html');
-// }
+document.addEventListener('init', function(event) {
+  if (event.target.matches('#signup')) {
+    document.getElementById('onSignup').addEventListener('click', signup);
+  }
+  if (event.target.matches('#login')) {
+    document.getElementById('onSignin').addEventListener('click', signin);
+  }
+  if (event.target.matches('#profile')) {
+    document.getElementById('logout').addEventListener('click', logout);
+    document.getElementById('switch').addEventListener('click', switchChange);
+    document.getElementById('username').innerHTML = userName != null ? userName : "Guest user";
+    console.log("user name is: ",userName);
+  }
+  
+}, false);
+const signin = () => {
+  const email = document.getElementById('siemail').value;
+  const password = document.getElementById('sipassword').value;
+  console.log(email, password);
+  firebase
+    .signin(email, password)
+    .then(user => {
+      console.log(user);
+      checkUser();
+    })
+    .catch(error => {
+      ons.notification.alert(error.code);
+    }
+    );
+}
+const anonymousLogin = () => {
+  firebase.anonymousLogin().then(() => {
+    checkUser();
+  }).catch(error => {
+    ons.notification.alert(error);
+  }
+  );
+}
+const signup = () =>{
+  console.log('signup');
+  const email = document.getElementById('suemail').value;
+  const password = document.getElementById('supassword').value;
+  const name = document.getElementById('suname').value;
+  console.log(email, password, name);
+  firebase
+    .signup(email, password)
+    .then(user => {
+      console.log(user);
+      firebase.storeUserName(name);
+      firebase.createUser(user.uid, name, email);
+      checkUser();
+    })
+    .catch(error => {
+      ons.notification.alert(error);
+    })
+}
+const checkUser = () =>{
+  firebase.onAuthStateChanged(user => {
+    if(user){
+      console.log(user);
+      userName = user.displayName;
+      myNavigator.resetToPage('pages/home.html');
+    }
+    else{
+      console.log('not logged in');
+      myNavigator.resetToPage('pages/welcome.html');
+    }
+  }
+  );
+}
+checkUser();
 
-// document.addEventListener('prechange', function(event) {
-//   document.querySelector('ons-toolbar .center')
-//     .innerHTML = event.tabItem.getAttribute('label');
-// });
+const login = () => {
+    myNavigator.resetToPage('pages/home.html');
+}
+
+document.addEventListener('prechange', function(event) {
+  document.querySelector('ons-toolbar .center')
+    .innerHTML = event.tabItem.getAttribute('label');
+});
 function onSignInClick(){
   myNavigator.pushPage('pages/login.html');
 }
@@ -55,6 +119,9 @@ function onGuestClick(){
 //   myNavigator.pushPage('pages/recipe.html', {data: {title: 'Page 2'}});
 // };
 const logout = () => {
+  firebase.logout().then(() => {
+    checkUser();
+  });
   myNavigator.resetToPage('pages/welcome.html');
 }
 const switchChange = () =>{

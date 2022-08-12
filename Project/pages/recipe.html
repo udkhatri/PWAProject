@@ -1,5 +1,4 @@
 <ons-page id="recipe">
-
   <script>  
   const options = {
 	method: 'GET',
@@ -17,7 +16,7 @@ const saveRecipe = (recipenumber, button) => {
       const list = document.querySelector('#recipe-list');
       list.appendChild(ons.createElement(`
         <ons-list-item expandable>
-          <img src=${image} style="width: 15%">
+          <img src=${image} style="width: 55px; height:55px">
           ${recipenumber} ${name}
           <div class="expandable-content">
             <ons-button onclick="saveRecipe(${recipenumber}, this)">Save</ons-button>
@@ -96,7 +95,12 @@ const saveRecipe = (recipenumber, button) => {
       }
     });
   </script>
+ <ons-input id="search" class="searchBar" placeholder="Search" ></ons-input>
+ <p>
+  <v-ons-search-input placeholder="Search something" v-model="query"></v-ons-search-input>
+</p>
 
+ <ons-list-header>Search result:</ons-list-header>
   <ons-list id="recipe-list">
   </ons-list>
 

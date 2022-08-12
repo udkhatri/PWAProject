@@ -1,8 +1,8 @@
 
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-auth.js";
-  import { getFirestore, collection, addDoc,getDocs ,query,where,doc,updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-firestore.js';
+  import { getAuth, createUserWithEmailAndPassword, signInAnonymously,signInWithEmailAndPassword, onAuthStateChanged,updateProfile } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-auth.js";
+  import { getFirestore, setDoc,collection, addDoc,getDocs ,query,where,doc,updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-firestore.js';
 
 export default class Firebase {
     constructor(){
@@ -37,7 +37,44 @@ export default class Firebase {
         });
       }) 
       }
-
+      storeUserName(name){
+        updateProfile(this.auth.currentUser, {
+          displayName: name
+        })
+      }
+      logout(){
+        return new Promise((resolve,reject) =>{
+          this.auth.signOut()
+          resolve(true)
+        });
+      }
+      anonymousLogin(){
+        return new Promise((resolve,reject) =>{
+          const auth = getAuth();
+          signInAnonymously(auth)
+            .then((user) => {
+              console.log("Created",user.user);
+              this.createUser(user.user.uid, "Guest user", "Anonymous");
+              resolve(user.user);
+            })
+            .catch((error) => {
+              reject(error.message);
+              const errorCode = error.code;
+              const errorMessage = error.message;
+            });
+        })
+        
+      }
+      async createUser(id,name,email) {
+        const newUserRef = doc(collection(this.db, "users"),id);
+        let data = {
+          name: name,
+          email: email,
+          id: id,
+          favorites: []
+        }
+        await setDoc(newUserRef, data);
+      }
       signin(email, password){
         return new Promise((resolve,reject) =>{
           signInWithEmailAndPassword(this.auth, email, password)
