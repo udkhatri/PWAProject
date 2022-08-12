@@ -1,3 +1,6 @@
+import Firebase from "../firebase.js";
+console.log("logging ");
+const firebase = new Firebase();
 const myNavigator = document.getElementById('my-navigator');
 // Service Worker registration
 if ('serviceWorker' in navigator) {
@@ -10,7 +13,23 @@ if ('serviceWorker' in navigator) {
 else {
   console.log('Service Worker is not supported by this browser.');
 }
+›
+document.getElementById('loginButton').addEventListener('click', login);
+const checkUser = () =>{
+  firebase.onAuthStateChanged(user => {
+    if(user){
+      console.log(user);
+      myNavigator.resetToPage('pages/nav.html');
+    }
+    else{
+      console.log('not logged in');
+      myNavigator.resetToPage('pages/welcome.html');
+    }
+  }
+  );
+}
 
+checkUser();
 const login = () => {
     myNavigator.resetToPage('pages/nav.html');
 }
