@@ -1,43 +1,4 @@
 <ons-page id="favorite">
-  <script>
-    let savedRecipe = [];
-
-    const addRecipeToGrid = recipeNumber => {
-      // we save a list so we can pass it to the gallery
-      savedRecipe.push(recipeNumber);
-    };
-
-    document.addEventListener('show', ({ target }) => {
-  if (target.matches('#favorite')) {
-    const { recipeNumber, savedRecipe } = document.querySelector('#myNavigator').topPage.data;
-
-    const carousel = document.querySelector('#carousel');
-
-    // figure out what new pokemon have been saved since we last showed the gallery
-    // this way we don't accidentally add the same pokemon twice
-    const sliceIndex = carousel.itemCount - savedRecipe.length;
-
-    if (sliceIndex !== 0) { // if there are unadded pokemon
-      const unaddedPokemon = savedRecipe.slice(sliceIndex);
-
-      unaddedPokemon.map(number => {
-        const carouselItem = ons.createElement(`
-          <ons-carousel-item>
-            <ons-card>
-              <img class="gallery-image" src="img/${number}.png" />
-            </ons-card>
-          </ons-carousel-item>
-        `);
-
-        carousel.appendChild(carouselItem);
-      });
-    }
-
-    // go to the selected pokemon
-    carousel.setActiveIndex(savedRecipe.indexOf(recipeNumber));
-  }
-});
-  </script>
   <style>
     #grid {
       display: grid;
@@ -51,6 +12,28 @@
     }
   </style>
 
+  <script>
+
+    let savedRecipe = [];
+
+    const addRecipeToGrid = recipeTitle => {
+      // we save a list so we can pass it to the gallery
+     // savedRecipe.push(recipeNumber);
+
+      // now add the new recipe to the grid
+      const grid = document.querySelector('#grid');
+      const cell = document.createElement('div');
+      // cell.onclick = () => document.querySelector('#navigator')
+      //   .bringPageTop('gallery.html', { data: { recipeImage, savedRecipe } });
+      const text = document.createElement('p');
+      const image = document.createElement('img');
+      image.setAttribute('src', `https://spoonacular.com/recipeImages/Ramen-Noodle-Coleslaw-556177.jpg`);
+      text.innerHTML = recipeTitle;
+      cell.appendChild(text);
+      cell.appendChild(image);
+      grid.appendChild(cell);
+    };
+
 
   </script>
 
@@ -58,34 +41,3 @@
     <div id="grid"></div>
   </div>
 </ons-page>
-<!-- <ons-page id="favorite">
-      <ons-list>
-        <ons-list>
-          <ons-list-header>Search result:</ons-list-header>
-          <ons-list-item tappable onclick="pushPage()">
-            <div class="left">
-              <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
-            </div>
-            <div class="center">
-              <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
-            </div>
-          </ons-list-item>
-          <ons-list-item tappable onclick="pushPage()">
-            <div class="left">
-              <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
-            </div>
-            <div class="center">
-              <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
-            </div>
-          </ons-list-item>
-          <ons-list-item tappable onclick="pushPage()">
-            <div class="left">
-              <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
-            </div>
-            <div class="center">
-              <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
-            </div>
-          </ons-list-item>
-        </ons-list>
-    
-  </ons-page> -->

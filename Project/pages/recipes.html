@@ -1,0 +1,95 @@
+<ons-page id="recipes">
+  <script>
+    const url =
+      "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random";
+    const options = {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": "8c3134a6e6msh40114e5b61fc300p13f380jsn0bc270040660",
+        "X-RapidAPI-Host":
+          "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
+      },
+    };
+    const saveRecipe = (recipeTitle, button) => {
+      addRecipeToGrid(recipeTitle);
+      button.parentNode.parentNode.hideExpansion();
+    };
+
+    function viewRecipe(recipeID) {
+      let number = 22;
+      //id = parseInt(recipeID);
+      console.log("This is from recipes page what I have for iD "+ recipeID);
+     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
+      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
+    }
+    document.addEventListener("init", ({ target }) => {
+      if (target.matches("#recipes")) {
+        let nextrecipeNumber = 1; // use to keep track of the recipe numbers
+        let recipeImage;
+
+        const get = async () => {
+          // do the API call and get JSON response
+          let number = "?number=1";
+          let newUrl = url + number;
+          const response = await fetch(newUrl, options);
+          const json = await response.json();
+
+          const newRecipeTitle = json.recipes.map((e) => e.title);
+          const recipeImage = json.recipes.map((e) => e.image);
+          const recipeID = json.recipes.map((e) => e.id);
+          //const recipeID = json.recipes.map((e) => e.id);
+          const list = document.querySelector("#recipe-list");
+          newRecipeTitle.forEach((title, i) => {
+            image = recipeImage[i];
+            id = recipeID[i];
+            //avoids getting reesults without images
+            if (typeof image === 'string') {
+              list.appendChild(
+                ons.createElement(`
+                <ons-list-item expandable>
+                  <img src=${image} style="width: 55px; height:55px">
+                  ${nextrecipeNumber} ${title}
+                  <div class="expandable-content">
+                    <ons-button onclick="saveRecipe()">Save</ons-button>
+                    <ons-button onclick="viewRecipe(${id})">View</ons-button>
+                  </div>
+                </ons-list-item>
+        `)
+              );
+              nextrecipeNumber++;
+            } else {
+              console.log("No image found");
+            }
+          });
+
+          //url = json.next;
+
+          // hide the spinner when all the pages have been loaded
+          if (!url) {
+            document.querySelector("#after-list").style.display = "none";
+          }
+        };
+        // get the first set of results as soon as the page is initialised
+        get();
+
+        // at the bottom of the list get the next set of results and append them
+        target.onInfiniteScroll = (done) => {
+          if (url) {
+            setTimeout(() => {
+              get();
+              done();
+            }, 200);
+          }
+        };
+      }
+    });
+  </script>
+
+  <ons-list-header>Feed</ons-list-header>
+
+  <ons-list id="recipe-list"> </ons-list>
+
+  <div id="after-list" style="margin: 20px; text-align: center">
+    <ons-icon icon="fa-spinner" size="26px" spin></ons-icon>
+  </div>
+</ons-page>

@@ -1,5 +1,17 @@
 
-<ons-page id="recipe">
+<ons-page id="view-recipe">
+  <script>
+    document.addEventListener('show', ({ target }) => {
+      if (target.matches('#view-recipe')) {
+
+        let {recipeID} = document.querySelector('#my-navigator').topPage.data;
+        var data = JSON.parse(recipeID);
+        console.log("This is the id from other page " + recipeID); // Will return "value1"    
+      }
+     
+    });
+    
+  </script>
     <ons-toolbar>
         <div class="left"><ons-back-button>back</ons-back-button></div>
         <div class="center">Recipe name</div>

@@ -1,0 +1,91 @@
+<ons-page id="search-page">
+  <script>
+    const myNavigator = document.getElementById('my-navigator');
+        const baseURL =
+      "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch?query=";
+    const endURL =
+      "&instructionsRequired=true&fillIngredients=false&addRecipeInformation=true&ignorePantry=true&number=10&limitLicense=false";
+      
+    
+
+
+    document.addEventListener("init", ({ target }) => {
+      if (target.matches("#search-page")) {
+        document.getElementById('searchButton').addEventListener('click', ()=>{
+          let nextrecipeNumber = 1; // use to keep track of the recipe numbers
+          let recipeImage;
+          let searchResult = document.getElementById("search").value;
+          console.log("You are searching for this " + searchResult);
+
+        const get = async () => {
+          // do the API call and get JSON response
+
+          let newUrl = baseURL + searchResult + endURL;
+          const response = await fetch(newUrl, options);
+          const json = await response.json();
+
+          const newRecipeTitle = json.results.map((e) => e.title);
+          const recipeImage = json.results.map((e) => e.image);
+          const recipeId = json.results.map((e)=>e.id);
+          //const recipeID = json.recipes.map((e) => e.id);
+          const list = document.querySelector("#result-list");
+          newRecipeTitle.forEach((title, i) => {
+            image = recipeImage[i];
+            id = recipeId[i];
+            //avoids getting reesults without images
+            if (typeof image === "string") {
+              list.appendChild(
+                ons.createElement(`
+                <ons-list-item expandable>
+                  <img src=${image} style="width: 55px; height:55px">
+                   ${title}
+                  <div class="expandable-content">
+                    <ons-button onclick="viewRecipe(${id})">View</ons-button>
+                  </div>
+                </ons-list-item>
+        `)
+              );
+              nextrecipeNumber++;
+            } else {
+              console.log("No image found");
+            }
+          });
+
+
+          // hide the spinner for now
+          if (url) {
+            document.querySelector("#after-list").style.display = "none";
+          }
+        };
+        // get the first set of results as soon as the page is initialised
+        get();
+
+        // at the bottom of the list get the next set of results and append them
+        // target.onInfiniteScroll = (done) => {
+        //   if (url) {
+        //     setTimeout(() => {
+        //       get();
+        //       done();
+        //     }, 200);
+        //   }
+        // };
+        });
+      }
+    });
+  </script>
+
+  <ons-input id="search" class="searchBar" placeholder="Search"></ons-input>
+  <p>
+    <v-ons-search-input
+      placeholder="Search something"
+      v-model="query"
+    ></v-ons-search-input>
+  </p>
+  <ons-button id="searchButton">Search</ons-button>
+
+  <ons-list id="result-list"> </ons-list>
+  <!-- Hiding the spinner as currently the results will be the same when you run it again so no point in doing that for now -->
+  <!-- <div id="after-list" style="margin: 20px; text-align: center">
+    <ons-icon icon="fa-spinner" size="26px" spin></ons-icon>
+  </div> -->
+</ons-page>
