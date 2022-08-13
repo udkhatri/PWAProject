@@ -37,6 +37,8 @@
           const newRecipeTitle = json.recipes.map((e) => e.title);
           const recipeImage = json.recipes.map((e) => e.image);
           const recipeID = json.recipes.map((e) => e.id);
+
+
           //const recipeID = json.recipes.map((e) => e.id);
           const list = document.querySelector("#recipe-list");
           newRecipeTitle.forEach((title, i) => {

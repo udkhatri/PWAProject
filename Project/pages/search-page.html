@@ -20,8 +20,8 @@
         const get = async () => {
           // do the API call and get JSON response
 
-          let newUrl = baseURL + searchResult + endURL;
-          const response = await fetch(newUrl, options);
+          let searchURL = baseURL + searchResult + endURL;
+          const response = await fetch(searchURL, options);
           const json = await response.json();
 
           const newRecipeTitle = json.results.map((e) => e.title);
