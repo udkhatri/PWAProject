@@ -7,6 +7,10 @@ const baseURL =
 "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch?query=";
 const endURL =
 "&instructionsRequired=true&fillIngredients=false&addRecipeInformation=true&ignorePantry=true&number=10&limitLicense=false";
+
+        const baseID_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/";
+        const endID_URL = "/information?includeNutrition=true"
+
 function viewRecipe(recipeID) {
   let number = 22;
   const myNavigator = document.getElementById('my-navigator');
@@ -31,7 +35,49 @@ setTimeout(() => {
  
 
 } , 1000);
+document.addEventListener('show', ({ target }) => {
+  if (target.matches('#view-recipe')) {
+    //has to be curly brackets 
+    let {recipeID} = document.querySelector('#my-navigator').topPage.data;
+    var id = recipeID;
+    console.log("This is the id from other page " + id); // Get id from the other page"   
 
+    const get = async () => {
+      // do the API call and get JSON response
+     
+      let recipeURL = baseID_URL + id + endID_URL;
+      const response = await fetch(recipeURL, options);
+      const json = await response.json();
+
+      const nutrientsMap = json.nutrition.nutrients.map(({amount})=> amount);
+      const {summary, title, image, instructions} = json;
+
+      // This variables can be used as well, might be easier to read but left to show that both are good the ones in element id and these
+      const recipeSummary = summary;
+      const recipeTitle = title;
+      const recipeImage = image;
+      const recipeInstructions = instructions;
+      const caloriesValue = nutrientsMap[0];
+      const fatValue = nutrientsMap[1];
+      const carbsValue = nutrientsMap[3];
+      const proteinValue = nutrientsMap[9];
+
+
+      document.getElementById('recipeTitle').innerHTML = title;
+      document.getElementById("recipeImage").src = image;
+      document.getElementById('recipeSummary').innerHTML = summary;
+      document.getElementById('recipeInstructions').innerHTML = instructions;
+      document.getElementById('caloriesValue').innerHTML = nutrientsMap[0];
+      document.getElementById('fatValue').innerHTML = nutrientsMap[1];
+      document.getElementById('carbsValue').innerHTML =  nutrientsMap[3];
+      document.getElementById('proteinValue').innerHTML = nutrientsMap[9];
+
+    };
+    // get the first set of results as soon as the page is initialised
+     get();
+  }
+
+});
 document.addEventListener('init', function(event) {
   if (event.target.matches('#welcome')) {
     document.getElementById('loginButton').addEventListener('click', onSignInClick);

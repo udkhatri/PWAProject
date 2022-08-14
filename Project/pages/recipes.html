@@ -42,14 +42,15 @@
             if (typeof image === 'string') {
               list.appendChild(
                 ons.createElement(`
-                <ons-list-item expandable>
-                  <img src=${image} style="width: 55px; height:55px">
-                  ${nextrecipeNumber} ${title}
-                  <div class="expandable-content">
-                    <ons-button onclick="saveRecipe()">Save</ons-button>
-                    <ons-button onclick="viewRecipe(${id})">View</ons-button>
+                <ons-list-item tappable onclick="viewRecipe(${id})">
+                  <div class="left">
+                    <img class="list-item__thumbnail" src=${image}>
+                  </div>
+                  <div class="center">
+                    <span class="list-item__title">${title}</span><span class="list-item__subtitle"></span>
                   </div>
                 </ons-list-item>
+                
         `)
               );
               nextrecipeNumber++;
@@ -68,15 +69,15 @@
         // get the first set of results as soon as the page is initialised
         get();
 
-        // at the bottom of the list get the next set of results and append them
-        target.onInfiniteScroll = (done) => {
-          if (url) {
-            setTimeout(() => {
-              get();
-              done();
-            }, 200);
-          }
-        };
+        // // at the bottom of the list get the next set of results and append them
+        // target.onInfiniteScroll = (done) => {
+        //   if (url) {
+        //     setTimeout(() => {
+        //       get();
+        //       done();
+        //     }, 200);
+        //   }
+        // };
       }
     });
   </script>
