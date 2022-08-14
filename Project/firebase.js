@@ -54,7 +54,7 @@ export default class Firebase {
           signInAnonymously(auth)
             .then((user) => {
               console.log("Created",user.user);
-              this.createUser(user.user.uid, "Guest user", "Anonymous");
+              this.createUser(user.user.uid, "Guest user", "Anonymous",user.user.isAnonymous);
               resolve(user.user);
             })
             .catch((error) => {
@@ -65,9 +65,10 @@ export default class Firebase {
         })
         
       }
-      async createUser(id,name,email) {
+      async createUser(id,name,email,isAnonymous) {
         const newUserRef = doc(collection(this.db, "users"),id);
         let data = {
+          isGuest: isAnonymous,
           name: name,
           email: email,
           id: id,

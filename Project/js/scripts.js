@@ -191,7 +191,7 @@ const signup = () =>{
     .then(user => {
       console.log(user);
       firebase.storeUserName(name);
-      firebase.createUser(user.uid, name, email);
+      firebase.createUser(user.uid, name, email,user.isAnonymous);
       checkUser();
     })
     .catch(error => {
