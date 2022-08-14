@@ -3,14 +3,17 @@ console.log("logging ");
 const firebase = new Firebase();
 const myNavigator = document.getElementById('my-navigator');
 var userName = "Guest user"
+var userEmail = "";
+var userData = {};
+var userID;
 const baseURL =
 "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch?query=";
 const endURL =
 "&instructionsRequired=true&fillIngredients=false&addRecipeInformation=true&ignorePantry=true&number=10&limitLicense=false";
 
-        const baseID_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/";
-        const endID_URL = "/information?includeNutrition=true"
-
+const baseID_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/";
+const endID_URL = "/information?includeNutrition=true"
+var user;
 function viewRecipe(recipeID) {
   let number = 22;
   const myNavigator = document.getElementById('my-navigator');
@@ -41,7 +44,13 @@ document.addEventListener('show', ({ target }) => {
     let {recipeID} = document.querySelector('#my-navigator').topPage.data;
     var id = recipeID;
     console.log("This is the id from other page " + id); // Get id from the other page"   
-
+    document.getElementById('saveRecipeButton').addEventListener('click', () =>saveRecipe(id));
+    if(userData.favorites.includes(id)){
+      document.getElementById("saveRecipeButton").style.backgroundColor = "#f84141";
+    }else{
+      document.getElementById("saveRecipeButton").style.backgroundColor = "white";
+    }
+    
     const get = async () => {
       // do the API call and get JSON response
      
@@ -97,7 +106,7 @@ document.addEventListener('init', function(event) {
     console.log("user name is: ",userName);
   }
   if (event.target.matches('#view-recipe')) {
-   document.getElementById('saveRecipeButton').addEventListener('click', saveRecipe);
+  
   }
   if (event.target.matches("#search-page")) {
     const myNavigator = document.getElementById('my-navigator');
@@ -109,8 +118,6 @@ document.addEventListener('init', function(event) {
     document.getElementById('searchButton').addEventListener('click', ()=>{
       // use to keep track of the recipe numbers
       let recipeImage;
-      
-    
       console.log("You are searching for this " + searchResult.value);
     get(searchResult.value);
     });
@@ -166,6 +173,7 @@ const signin = () => {
     .then(user => {
       console.log(user);
       checkUser();
+      setUserData(user.id)
     })
     .catch(error => {
       ons.notification.alert(error.code);
@@ -173,8 +181,9 @@ const signin = () => {
     );
 }
 const anonymousLogin = () => {
-  firebase.anonymousLogin().then(() => {
+  firebase.anonymousLogin().then((user) => {
     checkUser();
+    setUserData(user.id)
   }).catch(error => {
     ons.notification.alert(error);
   }
@@ -193,16 +202,28 @@ const signup = () =>{
       firebase.storeUserName(name);
       firebase.createUser(user.uid, name, email,user.isAnonymous);
       checkUser();
+      setUserData(user.id)
     })
     .catch(error => {
       ons.notification.alert(error);
     })
+}
+const setUserData = (id) => {
+  firebase.getUserData(id).then((user) => {
+    
+    userName = user.name;
+    userEmail = user.email;
+    userData = user
+    console.log("user is: ",userData.favorites);
+  })
 }
 const checkUser = () =>{
   firebase.onAuthStateChanged(user => {
     if(user){
       console.log(user);
       userName = user.displayName;
+      userID = user.uid;
+      setUserData(user.uid)
       myNavigator.resetToPage('pages/home.html');
     }
     else{
@@ -239,8 +260,20 @@ function onGuestClick(){
   myNavigator.pushPage('pages/home.html')
 }
 
-const saveRecipe = () =>{
-  
+const saveRecipe = (id) =>{
+  console.log("save recipe",id);
+  firebase.addToFavorite(userID,id,userData.favorites).then((data)=>{
+    userData.favorites = data.newArray
+    console.log("data",data.newArray);
+    if(data.added){
+      ons.notification.alert("Recipe added to favorites",{title:"Success",timeout: 2000});
+      document.getElementById("saveRecipeButton").style.backgroundColor = "#f84141";
+    }
+    else{
+      ons.notification.alert("Recipe removed from favorites",{title:"Error",timeout: 2000});
+      document.getElementById("saveRecipeButton").style.backgroundColor = "white";
+    }
+  });
 }
 
 const logout = () => {

@@ -23,7 +23,7 @@ export default class Firebase {
       this.auth = getAuth(app);
       this.user = this.auth.currentUser;
     }
-
+    
     signup(email, password){
       return new Promise((resolve,reject) =>{
         createUserWithEmailAndPassword(this.auth, email, password)
@@ -88,9 +88,46 @@ export default class Firebase {
           });
         })
       }
-
+      async getUserData(id){
+        console.log("Reached here",id);
+        return new Promise(async (resolve,reject) =>{
+          const q = query(collection(this.db, "users"), where("id", "==", id));
+          const querySnapshot = await getDocs(q);
+          console.log("op", querySnapshot);
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            resolve(doc.data());
+          });
+        }
+        )
+      }
       onAuthStateChanged(callback){
         onAuthStateChanged(this.auth, callback);
+      }
+      async addToFavorite(user,id,oldFavorites){
+        console.log("data: ",user,oldFavorites);
+        return new Promise(async(resolve,reject) =>{
+          const userCollection = doc(this.db, "users", user);
+          var newArray = []
+          console.log("fav is: ",oldFavorites);
+          if (oldFavorites.includes(id)){
+            const index = oldFavorites.indexOf(id);
+            if (index > -1) { // only splice array when item is found
+              oldFavorites.splice(index, 1); // 2nd parameter means remove one item only
+            }
+            console.log("new array is: ",oldFavorites);
+            newArray = oldFavorites;
+            resolve({newArray:newArray,added:false});
+          }
+          else{
+            newArray = [...oldFavorites,id];
+            resolve({newArray:newArray,added:true});
+          }
+          await updateDoc(userCollection, {
+            favorites: newArray
+          });
+        }
+        )
       }
 }
     
