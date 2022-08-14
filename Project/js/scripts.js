@@ -85,8 +85,75 @@ document.addEventListener('show', ({ target }) => {
     // get the first set of results as soon as the page is initialised
      get();
   }
+  if (target.matches('#favorite')) {
+    let spinner = document.getElementById('#favorite-spinner');
+    function viewRecipe(recipeID) {
+      //you can also send it this other way, just for ref
+     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
+      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
+    }
+    console.log("This is the favorites page");
+        let recipeID = userData.favorites[0];
+        var id = recipeID;
+        console.log("This is the id from other page " + id); // Get id from the other page"   
+        
+        if(userData.favorites.length > 0){
+          const list = document.querySelector("#fav-result-list");
+          document.querySelector("#favorite-spinner").style.display = "none";
+          list.innerHTML = "";
+          userData.favorites.forEach(favorite => {
+            getSingleFavorite(favorite);
+          }
+          )
+        }else{
+          document.querySelector("#favorite-spinner").style.display = "none";
+          document.getElementById("fav-result-list").innerHTML = "You haven't saved any recipes yet";
+        }
+        // get the first set of results as soon as the page is initialised
+        
+  }
+  if (target.matches('#profile')) {
+    document.getElementById('logout').addEventListener('click', logout);
+    document.getElementById('switch').addEventListener('click', switchChange);
+    document.getElementById('username').innerHTML = userName != null ? userName : "Guest user";
 
+    console.log("This is the user name::: " + userData.name);
+    if(userData.isGuest){
+      document.getElementById('useremail').innerHTML = "You are using the app as a Guest. You can not save favorite recipes without signing in. Please logout from the guest account and sign in to save your favorite recipes.";
+    }else{
+      document.getElementById('useremail').innerHTML = userData.email; 
+    }
+  }
 });
+const getSingleFavorite = async (id) =>{
+    // do the API call and get JSON response
+    let recipeURL = baseID_URL + id + endID_URL;
+    const response = await fetch(recipeURL, options);
+    const json = await response.json();
+  
+    const {summary, title, image, instructions} = json;
+    console.log("This is the json from favorites page " + title,image);
+    const list = document.querySelector("#fav-result-list");
+      //avoids getting reesults without images
+      if (typeof image === "string") {
+        console.log("This is the list HTML  " + list.innerHTML);
+        list.appendChild(
+          ons.createElement(`
+          <ons-list-item tappable onclick="viewRecipe(${id})">
+            <div class="left">
+              <img class="list-item__thumbnail" src=${image}>
+            </div>
+            <div class="center">
+              <span class="list-item__title">${title}dsds</span><span class="list-item__subtitle"></span>
+            </div>
+          </ons-list-item>
+          `)
+        );
+      } else {
+        console.log("No image found");
+      }
+   
+}
 document.addEventListener('init', function(event) {
   if (event.target.matches('#welcome')) {
     document.getElementById('loginButton').addEventListener('click', onSignInClick);
@@ -99,15 +166,8 @@ document.addEventListener('init', function(event) {
   if (event.target.matches('#login')) {
     document.getElementById('onSignin').addEventListener('click', signin);
   }
-  if (event.target.matches('#profile')) {
-    document.getElementById('logout').addEventListener('click', logout);
-    document.getElementById('switch').addEventListener('click', switchChange);
-    document.getElementById('username').innerHTML = userName != null ? userName : "Guest user";
-    console.log("user name is: ",userName);
-  }
-  if (event.target.matches('#view-recipe')) {
   
-  }
+
   if (event.target.matches("#search-page")) {
     const myNavigator = document.getElementById('my-navigator');
     let searchResult = document.getElementById("search");
@@ -154,7 +214,7 @@ const get = async (searchResult) => {
             <span class="list-item__title">${title}</span><span class="list-item__subtitle"></span>
           </div>
         </ons-list-item>
-`)
+        `)
       );
       nextrecipeNumber++;
     } else {
@@ -179,6 +239,13 @@ const signin = () => {
       ons.notification.alert(error.code);
     }
     );
+}
+const displayFavorites = () => {
+  if(userData.favorites.length > 0){
+    userData.favorites.forEach(favorite => {
+
+    })
+  }
 }
 const anonymousLogin = () => {
   firebase.anonymousLogin().then((user) => {
@@ -210,7 +277,6 @@ const signup = () =>{
 }
 const setUserData = (id) => {
   firebase.getUserData(id).then((user) => {
-    
     userName = user.name;
     userEmail = user.email;
     userData = user
@@ -222,6 +288,7 @@ const checkUser = () =>{
     if(user){
       console.log(user);
       userName = user.displayName;
+      userEmail = user.email;
       userID = user.uid;
       setUserData(user.uid)
       myNavigator.resetToPage('pages/home.html');
@@ -262,18 +329,23 @@ function onGuestClick(){
 
 const saveRecipe = (id) =>{
   console.log("save recipe",id);
-  firebase.addToFavorite(userID,id,userData.favorites).then((data)=>{
-    userData.favorites = data.newArray
-    console.log("data",data.newArray);
-    if(data.added){
-      ons.notification.alert("Recipe added to favorites",{title:"Success",timeout: 2000});
-      document.getElementById("saveRecipeButton").style.backgroundColor = "#f84141";
-    }
-    else{
-      ons.notification.alert("Recipe removed from favorites",{title:"Error",timeout: 2000});
-      document.getElementById("saveRecipeButton").style.backgroundColor = "white";
-    }
-  });
+  if(userData.isGuest){
+    ons.notification.alert("You must be logged in to save recipes. Please sign in or sign up.");
+  }else{
+    firebase.addToFavorite(userID,id,userData.favorites).then((data)=>{
+      userData.favorites = data.newArray
+      console.log("data",data.newArray);
+      if(data.added){
+        ons.notification.toast("Recipe added to favorites",{timeout: 2000});
+        document.getElementById("saveRecipeButton").style.backgroundColor = "#f84141";
+      }
+      else{
+        ons.notification.toast("Recipe removed from favorites",{timeout: 2000});
+        document.getElementById("saveRecipeButton").style.backgroundColor = "white";
+      }
+    });
+  }
+  
 }
 
 const logout = () => {

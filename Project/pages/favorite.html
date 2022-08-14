@@ -49,25 +49,15 @@
         };
         // get the first set of results as soon as the page is initialised
         get();
-
-        // at the bottom of the list get the next set of results and append them
-        target.onInfiniteScroll = (done) => {
-          if (url) {
-            setTimeout(() => {
-              get();
-              done();
-            }, 200);
-          }
-        };
       }
     });
   </script>
 
   <ons-list-header>Feed</ons-list-header>
 
-  <ons-list id="recipe-list"> </ons-list>
+  <ons-list id="fav-result-list"> </ons-list>
 
-  <div id="favorite-list" style="margin: 20px; text-align: center">
+  <div id="favorite-spinner" style="margin: 20px; text-align: center">
     <ons-icon icon="fa-spinner" size="26px" spin></ons-icon>
   </div>
 </ons-page>
