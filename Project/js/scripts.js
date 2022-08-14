@@ -3,6 +3,18 @@ console.log("logging ");
 const firebase = new Firebase();
 const myNavigator = document.getElementById('my-navigator');
 var userName = "Guest user"
+const baseURL =
+"https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch?query=";
+const endURL =
+"&instructionsRequired=true&fillIngredients=false&addRecipeInformation=true&ignorePantry=true&number=10&limitLicense=false";
+function viewRecipe(recipeID) {
+  let number = 22;
+  const myNavigator = document.getElementById('my-navigator');
+      //id = parseInt(recipeID);
+      console.log("This is from recipes page what I have for iD "+ recipeID);
+     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
+      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
+    }
 // Service Worker registration
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
@@ -16,13 +28,16 @@ else {
 }
 setTimeout(() => {
   // Timeout required for onsenUI
-  document.getElementById('loginButton').addEventListener('click', onSignInClick);
-  document.getElementById('signupButton').addEventListener('click', onSignUpClick);
-  document.getElementById('guestButton').addEventListener('click', anonymousLogin);
+ 
 
 } , 1000);
 
 document.addEventListener('init', function(event) {
+  if (event.target.matches('#welcome')) {
+    document.getElementById('loginButton').addEventListener('click', onSignInClick);
+    document.getElementById('signupButton').addEventListener('click', onSignUpClick);
+    document.getElementById('guestButton').addEventListener('click', anonymousLogin);
+  }
   if (event.target.matches('#signup')) {
     document.getElementById('onSignup').addEventListener('click', signup);
   }
@@ -38,17 +53,64 @@ document.addEventListener('init', function(event) {
   if (event.target.matches('#view-recipe')) {
    document.getElementById('saveRecipeButton').addEventListener('click', saveRecipe);
   }
-  if (event.target.matches('#search-page')){
-    function viewRecipe(recipeID) {
-      let number = 22;
-      //id = parseInt(recipeID);
-      console.log("This is from recipes page what I have for iD "+ recipeID);
-     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
-      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
-    }
+  if (event.target.matches("#search-page")) {
+    const myNavigator = document.getElementById('my-navigator');
+    let searchResult = document.getElementById("search");
+    searchResult.addEventListener('change',()=>{
+      console.log("chnage",searchResult.value);
+      get(searchResult.value);
+    })
+    document.getElementById('searchButton').addEventListener('click', ()=>{
+      // use to keep track of the recipe numbers
+      let recipeImage;
+      
+    
+      console.log("You are searching for this " + searchResult.value);
+    get(searchResult.value);
+    });
   }
+
   
 }, false);
+let nextrecipeNumber = 1;
+const get = async (searchResult) => {
+  // do the API call and get JSON response
+
+  let searchURL = baseURL + searchResult + endURL;
+  const response = await fetch(searchURL, options);
+  const json = await response.json();
+
+  const newRecipeTitle = json.results.map((e) => e.title);
+  const recipeImage = json.results.map((e) => e.image);
+  const recipeId = json.results.map((e)=>e.id);
+  
+  const list = document.querySelector("#result-list");
+  list.innerHTML = "";
+  newRecipeTitle.forEach((title, i) => {
+    image = recipeImage[i];
+    id = recipeId[i];
+    //avoids getting reesults without images
+    if (typeof image === "string") {
+      list.appendChild(
+        ons.createElement(`
+        <ons-list-item tappable onclick="viewRecipe(${id})">
+          <div class="left">
+            <img class="list-item__thumbnail" src=${image}>
+          </div>
+          <div class="center">
+            <span class="list-item__title">${title}</span><span class="list-item__subtitle"></span>
+          </div>
+        </ons-list-item>
+`)
+      );
+      nextrecipeNumber++;
+    } else {
+      console.log("No image found");
+    }
+  });
+
+  // hide the spinner for now
+};
 const signin = () => {
   const email = document.getElementById('siemail').value;
   const password = document.getElementById('sipassword').value;
