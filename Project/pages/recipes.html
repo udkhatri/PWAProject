@@ -15,13 +15,7 @@
       button.parentNode.parentNode.hideExpansion();
     };
 
-    function viewRecipe(recipeID) {
-      let number = 22;
-      //id = parseInt(recipeID);
-      console.log("This is from recipes page what I have for iD "+ recipeID);
-     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
-      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
-    }
+    
     document.addEventListener("init", ({ target }) => {
       if (target.matches("#recipes")) {
         let nextrecipeNumber = 1; // use to keep track of the recipe numbers
@@ -29,7 +23,7 @@
 
         const get = async () => {
           // do the API call and get JSON response
-          let number = "?number=1";
+          let number = "?number=10";
           let newUrl = url + number;
           const response = await fetch(newUrl, options);
           const json = await response.json();
@@ -87,11 +81,7 @@
     });
   </script>
 
-  <ons-list-header>Feed</ons-list-header>
+  <ons-list-header>Recipes You might like</ons-list-header>
 
   <ons-list id="recipe-list"> </ons-list>
-
-  <div id="after-list" style="margin: 20px; text-align: center">
-    <ons-icon icon="fa-spinner" size="26px" spin></ons-icon>
-  </div>
 </ons-page>

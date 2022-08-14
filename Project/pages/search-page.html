@@ -5,10 +5,13 @@
       "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch?query=";
     const endURL =
       "&instructionsRequired=true&fillIngredients=false&addRecipeInformation=true&ignorePantry=true&number=10&limitLicense=false";
-      
-    
-
-
+      function viewRecipe(recipeID) {
+      let number = 22;
+      //id = parseInt(recipeID);
+      console.log("This is from recipes page what I have for iD "+ recipeID);
+     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
+      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
+    }
     document.addEventListener("init", ({ target }) => {
       if (target.matches("#search-page")) {
         document.getElementById('searchButton').addEventListener('click', ()=>{
@@ -36,11 +39,12 @@
             if (typeof image === "string") {
               list.appendChild(
                 ons.createElement(`
-                <ons-list-item expandable>
-                  <img src=${image} style="width: 55px; height:55px">
-                   ${title}
-                  <div class="expandable-content">
-                    <ons-button onclick="viewRecipe(${id})">View</ons-button>
+                <ons-list-item tappable onclick="viewRecipe(${id})">
+                  <div class="left">
+                    <img class="list-item__thumbnail" src=${image}>
+                  </div>
+                  <div class="center">
+                    <span class="list-item__title">${title}</span><span class="list-item__subtitle"></span>
                   </div>
                 </ons-list-item>
         `)
@@ -59,14 +63,17 @@
     });
   </script>
 
-  <ons-input id="search" class="searchBar" placeholder="Search"></ons-input>
-  <p>
-    <v-ons-search-input
-      placeholder="Search something"
-      v-model="query"
-    ></v-ons-search-input>
+  <!-- <ons-input id="search" class="searchBar" placeholder="Search"></ons-input> -->
+  <p  style="text-align: center; margin-top: 10px;">
+    <ons-search-input
+    class="searchBar"
+      placeholder="Search"
+      id="search"
+      onchange="ons.notification.alert('Searched for: ' + this.value)"
+    ></ons-search-input>
+    <ons-button id="searchButton">Search</ons-button>
   </p>
-  <ons-button id="searchButton">Search</ons-button>
+
 
   <ons-list id="result-list"> </ons-list>
 

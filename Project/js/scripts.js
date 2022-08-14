@@ -38,6 +38,16 @@ document.addEventListener('init', function(event) {
   if (event.target.matches('#view-recipe')) {
    document.getElementById('saveRecipeButton').addEventListener('click', saveRecipe);
   }
+  if (event.target.matches('#search-page')){
+    function viewRecipe(recipeID) {
+      let number = 22;
+      //id = parseInt(recipeID);
+      console.log("This is from recipes page what I have for iD "+ recipeID);
+     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
+      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
+    }
+  }
+  
 }, false);
 const signin = () => {
   const email = document.getElementById('siemail').value;
