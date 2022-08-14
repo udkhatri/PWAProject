@@ -1,35 +1,26 @@
 <ons-page id="home">
-  <div>
-    <ons-input id="email" class="searchBar" placeholder="Search" ></ons-input>
-    <ons-list>
-      <ons-list-header>Search result:</ons-list-header>
-      <ons-list-item tappable onclick="pushPage()">
-        <div class="left">
-          <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
-        </div>
-        <div class="center">
-          <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
-        </div>
-      </ons-list-item>
-      <ons-list-item tappable onclick="pushPage()">
-        <div class="left">
-          <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
-        </div>
-        <div class="center">
-          <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
-        </div>
-      </ons-list-item>
-      <ons-list-item tappable onclick="pushPage()">
-        <div class="left">
-          <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
-        </div>
-        <div class="center">
-          <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
-        </div>
-      </ons-list-item>
-    </ons-list>
-   
-
-  </div>
-    
-  </ons-page>
+  <script>
+    document.addEventListener('prechange', ({ target, tabItem }) => {
+  if (target.matches('#tabbar')) {
+    document.querySelector('#home-toolbar .center').innerHTML = tabItem.getAttribute('label');
+  }
+});
+  </script>
+    <ons-toolbar>
+      <div class="left">
+      <ons-back-button></ons-back-button>
+    </div>
+      <div class="center">Home</div>
+      
+    </ons-toolbar>
+    <ons-tabbar swipeable position="bottom">
+      <ons-tab page="pages/recipes.html" label="Recipes" icon="ion-ios-home, material:md-home" active>
+      </ons-tab>
+      <ons-tab page="pages/search-page.html" label="Search" icon="ion-ios-search, material:md-search">
+      </ons-tab>
+      <ons-tab page="pages/favorite.html" label="Favorites" icon="heart" >
+      </ons-tab>
+      <ons-tab page="pages/profile.html" label="Profile" icon="ion-ios-person" >
+      </ons-tab>
+    </ons-tabbar>
+</ons-page>

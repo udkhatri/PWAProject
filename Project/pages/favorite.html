@@ -1,32 +1,63 @@
-
 <ons-page id="favorite">
-      <ons-list>
-        <ons-list>
-          <ons-list-header>Search result:</ons-list-header>
-          <ons-list-item tappable onclick="pushPage()">
-            <div class="left">
-              <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
-            </div>
-            <div class="center">
-              <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
-            </div>
-          </ons-list-item>
-          <ons-list-item tappable onclick="pushPage()">
-            <div class="left">
-              <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
-            </div>
-            <div class="center">
-              <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
-            </div>
-          </ons-list-item>
-          <ons-list-item tappable onclick="pushPage()">
-            <div class="left">
-              <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
-            </div>
-            <div class="center">
-              <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
-            </div>
-          </ons-list-item>
-        </ons-list>
+  <script>
     
-  </ons-page>
+    function viewRecipe(recipeID) {
+      //you can also send it this other way, just for ref
+     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
+      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
+    }
+    document.addEventListener("init", ({ target }) => {
+      if (target.matches("#recipes")) {
+        let nextrecipeNumber = 1; // use to keep track of the recipe numbers
+        let recipeImage;
+
+        const get = async () => {
+          // do the API call to Firestore?
+         // TO-DO
+         // call a function from script.js to get the firestore data?
+
+          // const response = await fetch(newUrl, options);
+          // const json = await response.json();
+
+          //This will be changed once we have the data on firestore
+          const newRecipeTitle = json.recipes.map((e) => e.title);
+          const recipeImage = json.recipes.map((e) => e.image);
+          const recipeID = json.recipes.map((e) => e.id);
+          const list = document.querySelector("#recipe-list");
+          newRecipeTitle.forEach((title, i) => {
+            image = recipeImage[i];
+            id = recipeID[i];
+          
+            list.appendChild(
+                ons.createElement(`
+                <ons-list-item expandable>
+                  <img src=${image} style="width: 55px; height:55px">
+                   ${title}
+                  <div class="expandable-content">
+                    <ons-button onclick="viewRecipe(${id})">View</ons-button>
+                  </div>
+                </ons-list-item>
+        `)
+              );
+              
+          });
+
+          // hide the spinner when all the pages have been loaded
+          if (!url) {
+            document.querySelector("#favorite-list").style.display = "none";
+          }
+        };
+        // get the first set of results as soon as the page is initialised
+        get();
+      }
+    });
+  </script>
+
+  <ons-list-header>Feed</ons-list-header>
+
+  <ons-list id="fav-result-list"> </ons-list>
+
+  <div id="favorite-spinner" style="margin: 20px; text-align: center">
+    <ons-icon icon="fa-spinner" size="26px" spin></ons-icon>
+  </div>
+</ons-page>

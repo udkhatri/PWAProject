@@ -1,0 +1,88 @@
+<ons-page id="recipes">
+  <script>
+    const url =
+      "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random";
+    const options = {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": "8c3134a6e6msh40114e5b61fc300p13f380jsn0bc270040660",
+        "X-RapidAPI-Host":
+          "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
+      },
+    };
+    const saveRecipe = (recipeTitle, button) => {
+      addRecipeToGrid(recipeTitle);
+      button.parentNode.parentNode.hideExpansion();
+    };
+
+    
+    document.addEventListener("init", ({ target }) => {
+      if (target.matches("#recipes")) {
+        let nextrecipeNumber = 1; // use to keep track of the recipe numbers
+        let recipeImage;
+
+        const get = async () => {
+          // do the API call and get JSON response
+          let number = "?number=10";
+          let newUrl = url + number;
+          const response = await fetch(newUrl, options);
+          const json = await response.json();
+
+          const newRecipeTitle = json.recipes.map((e) => e.title);
+          const recipeImage = json.recipes.map((e) => e.image);
+          const recipeID = json.recipes.map((e) => e.id);
+
+
+          //const recipeID = json.recipes.map((e) => e.id);
+          const list = document.querySelector("#recipe-list");
+          newRecipeTitle.forEach((title, i) => {
+            image = recipeImage[i];
+            id = recipeID[i];
+            //avoids getting reesults without images
+            if (typeof image === 'string') {
+              list.appendChild(
+                ons.createElement(`
+                <ons-list-item tappable onclick="viewRecipe(${id})">
+                  <div class="left">
+                    <img class="list-item__thumbnail" src=${image}>
+                  </div>
+                  <div class="center">
+                    <span class="list-item__title">${title}</span><span class="list-item__subtitle"></span>
+                  </div>
+                </ons-list-item>
+                
+        `)
+              );
+              nextrecipeNumber++;
+            } else {
+              console.log("No image found");
+            }
+          });
+
+          //url = json.next;
+
+          // hide the spinner when all the pages have been loaded
+          if (!url) {
+            document.querySelector("#after-list").style.display = "none";
+          }
+        };
+        // get the first set of results as soon as the page is initialised
+        get();
+
+        // // at the bottom of the list get the next set of results and append them
+        // target.onInfiniteScroll = (done) => {
+        //   if (url) {
+        //     setTimeout(() => {
+        //       get();
+        //       done();
+        //     }, 200);
+        //   }
+        // };
+      }
+    });
+  </script>
+
+  <ons-list-header>Recipes You might like</ons-list-header>
+
+  <ons-list id="recipe-list"> </ons-list>
+</ons-page>
