@@ -67,10 +67,12 @@ body{
     text-align: center;
     align-items: center;
  }
+
  .FatNumber{
     background-color: #FF8C8C;
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    width: 70px;
+    align-items: center;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -78,8 +80,9 @@ body{
  }
  .ProteinNumber{
     background-color: #FFC49A;
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    align-items: center;
+    width: 70px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -87,17 +90,19 @@ body{
  }
  .CarbsNumber{
     background-color: #AFE5A6;
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    width: 70px;
     border-radius: 50%;
     display: flex;
+    align-items: center;
     justify-content: center;
     box-shadow: 1px 5px 6px rgba(186, 186, 186, 0.41);
  }
  .CaloriesNumber{
     background-color: #BFBFBF;
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    width: 70px;
+    align-items: center;
     border-radius: 50%;
     display: flex;
     justify-content: center;
