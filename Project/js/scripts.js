@@ -35,19 +35,9 @@ document.addEventListener('init', function(event) {
     document.getElementById('username').innerHTML = userName != null ? userName : "Guest user";
     console.log("user name is: ",userName);
   }
-  // don't need this we can use addEventListener to listen when save or view is clicked and then get the id that way for that particular button
-  // work in progress
-  // if (event.target.matches('#recipes')) {
-  //   setTimeout(() => {
-
-  //     let myID = document.getElementById('recipeID').innerText;
-  //     console.log("Test " + myID);
-  //     getRecipeId(myID);
-  //   }, 2000);
-  // }
-  // has to be a better way
-  // ok you can only save the one you actually view as that would then have static info that you can easily send to firestore and target using documentById
-  
+  if (event.target.matches('#view-recipe')) {
+   document.getElementById('saveRecipeButton').addEventListener('click', saveRecipe);
+  }
 }, false);
 const signin = () => {
   const email = document.getElementById('siemail').value;
@@ -131,7 +121,9 @@ function onGuestClick(){
   myNavigator.pushPage('pages/home.html')
 }
 
-
+const saveRecipe = () =>{
+  
+}
 
 const logout = () => {
   firebase.logout().then(() => {

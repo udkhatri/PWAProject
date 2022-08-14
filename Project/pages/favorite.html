@@ -1,43 +1,73 @@
 <ons-page id="favorite">
-  <style>
-    #grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-auto-rows: 33vw;
-    }
-
-    #grid img {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
-
   <script>
+    
+    function viewRecipe(recipeID) {
+      //you can also send it this other way, just for ref
+     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
+      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
+    }
+    document.addEventListener("init", ({ target }) => {
+      if (target.matches("#recipes")) {
+        let nextrecipeNumber = 1; // use to keep track of the recipe numbers
+        let recipeImage;
 
-    let savedRecipe = [];
+        const get = async () => {
+          // do the API call to Firestore?
+         // TO-DO
+         // call a function from script.js to get the firestore data?
 
-    const addRecipeToGrid = recipeTitle => {
-      // we save a list so we can pass it to the gallery
-     // savedRecipe.push(recipeNumber);
+          // const response = await fetch(newUrl, options);
+          // const json = await response.json();
 
-      // now add the new recipe to the grid
-      const grid = document.querySelector('#grid');
-      const cell = document.createElement('div');
-      // cell.onclick = () => document.querySelector('#navigator')
-      //   .bringPageTop('gallery.html', { data: { recipeImage, savedRecipe } });
-      const text = document.createElement('p');
-      const image = document.createElement('img');
-      image.setAttribute('src', `https://spoonacular.com/recipeImages/Ramen-Noodle-Coleslaw-556177.jpg`);
-      text.innerHTML = recipeTitle;
-      cell.appendChild(text);
-      cell.appendChild(image);
-      grid.appendChild(cell);
-    };
+          //This will be changed once we have the data on firestore
+          const newRecipeTitle = json.recipes.map((e) => e.title);
+          const recipeImage = json.recipes.map((e) => e.image);
+          const recipeID = json.recipes.map((e) => e.id);
+          const list = document.querySelector("#recipe-list");
+          newRecipeTitle.forEach((title, i) => {
+            image = recipeImage[i];
+            id = recipeID[i];
+          
+            list.appendChild(
+                ons.createElement(`
+                <ons-list-item expandable>
+                  <img src=${image} style="width: 55px; height:55px">
+                   ${title}
+                  <div class="expandable-content">
+                    <ons-button onclick="viewRecipe(${id})">View</ons-button>
+                  </div>
+                </ons-list-item>
+        `)
+              );
+              
+          });
 
+          // hide the spinner when all the pages have been loaded
+          if (!url) {
+            document.querySelector("#favorite-list").style.display = "none";
+          }
+        };
+        // get the first set of results as soon as the page is initialised
+        get();
 
+        // at the bottom of the list get the next set of results and append them
+        target.onInfiniteScroll = (done) => {
+          if (url) {
+            setTimeout(() => {
+              get();
+              done();
+            }, 200);
+          }
+        };
+      }
+    });
   </script>
 
-  <div id="content">
-    <div id="grid"></div>
+  <ons-list-header>Feed</ons-list-header>
+
+  <ons-list id="recipe-list"> </ons-list>
+
+  <div id="favorite-list" style="margin: 20px; text-align: center">
+    <ons-icon icon="fa-spinner" size="26px" spin></ons-icon>
   </div>
 </ons-page>

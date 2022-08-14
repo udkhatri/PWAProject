@@ -27,7 +27,7 @@
           const newRecipeTitle = json.results.map((e) => e.title);
           const recipeImage = json.results.map((e) => e.image);
           const recipeId = json.results.map((e)=>e.id);
-          //const recipeID = json.recipes.map((e) => e.id);
+          
           const list = document.querySelector("#result-list");
           newRecipeTitle.forEach((title, i) => {
             image = recipeImage[i];
@@ -51,24 +51,9 @@
             }
           });
 
-
           // hide the spinner for now
-          if (url) {
-            document.querySelector("#after-list").style.display = "none";
-          }
         };
-        // get the first set of results as soon as the page is initialised
         get();
-
-        // at the bottom of the list get the next set of results and append them
-        // target.onInfiniteScroll = (done) => {
-        //   if (url) {
-        //     setTimeout(() => {
-        //       get();
-        //       done();
-        //     }, 200);
-        //   }
-        // };
         });
       }
     });
@@ -84,8 +69,5 @@
   <ons-button id="searchButton">Search</ons-button>
 
   <ons-list id="result-list"> </ons-list>
-  <!-- Hiding the spinner as currently the results will be the same when you run it again so no point in doing that for now -->
-  <!-- <div id="after-list" style="margin: 20px; text-align: center">
-    <ons-icon icon="fa-spinner" size="26px" spin></ons-icon>
-  </div> -->
+
 </ons-page>
