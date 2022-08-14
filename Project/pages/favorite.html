@@ -1,11 +1,7 @@
 <ons-page id="favorite">
   <script>
     
-    function viewRecipe(recipeID) {
-      //you can also send it this other way, just for ref
-     // document.querySelector('#my-navigator').bringPageTop('pages/view-recipe.html', { data: id });
-      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
-    }
+
     document.addEventListener("init", ({ target }) => {
       if (target.matches("#recipes")) {
         let nextrecipeNumber = 1; // use to keep track of the recipe numbers
@@ -41,11 +37,6 @@
               );
               
           });
-
-          // hide the spinner when all the pages have been loaded
-          if (!url) {
-            document.querySelector("#favorite-list").style.display = "none";
-          }
         };
         // get the first set of results as soon as the page is initialised
         get();

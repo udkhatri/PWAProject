@@ -1,4 +1,3 @@
-
 /**
  * On Install Event
  * Triggered when the service worker is installed
@@ -7,7 +6,6 @@ self.addEventListener('install', function () {
   self.skipWaiting();
 });
 
-
 /**
  * On Activate Event
  * Triggered when the service worker is activated
@@ -15,7 +13,6 @@ self.addEventListener('install', function () {
 self.addEventListener('activate', function (event) {
   event.waitUntil(clients.claim());
 });
-
 
 /**
  * On Fetch Event

@@ -1,7 +1,11 @@
 <ons-page id="recipes">
   <script>
     const url =
-      "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random";
+      "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=10";
+    const saveRecipe = (recipeTitle, button) => {
+      addRecipeToGrid(recipeTitle);
+      button.parentNode.parentNode.hideExpansion();
+    };
     const options = {
       method: "GET",
       headers: {
@@ -10,12 +14,9 @@
           "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
       },
     };
-    const saveRecipe = (recipeTitle, button) => {
-      addRecipeToGrid(recipeTitle);
-      button.parentNode.parentNode.hideExpansion();
-    };
-
-    
+    function viewRecipe(recipeID) {
+      myNavigator.pushPage("pages/view-recipe.html",{ data: {recipeID}});
+    }
     document.addEventListener("init", ({ target }) => {
       if (target.matches("#recipes")) {
         let nextrecipeNumber = 1; // use to keep track of the recipe numbers
@@ -23,23 +24,20 @@
 
         const get = async () => {
           // do the API call and get JSON response
-          let number = "?number=10";
-          let newUrl = url + number;
-          const response = await fetch(newUrl, options);
+          const response = await fetch(url, options);
           const json = await response.json();
 
           const newRecipeTitle = json.recipes.map((e) => e.title);
           const recipeImage = json.recipes.map((e) => e.image);
           const recipeID = json.recipes.map((e) => e.id);
 
-
           //const recipeID = json.recipes.map((e) => e.id);
           const list = document.querySelector("#recipe-list");
           newRecipeTitle.forEach((title, i) => {
             image = recipeImage[i];
             id = recipeID[i];
-            //avoids getting reesults without images
-            if (typeof image === 'string') {
+            //avoids getting results without images
+            if (typeof image === "string") {
               list.appendChild(
                 ons.createElement(`
                 <ons-list-item tappable onclick="viewRecipe(${id})">
@@ -50,7 +48,6 @@
                     <span class="list-item__title">${title}</span><span class="list-item__subtitle"></span>
                   </div>
                 </ons-list-item>
-                
         `)
               );
               nextrecipeNumber++;
@@ -58,26 +55,19 @@
               console.log("No image found");
             }
           });
-
-          //url = json.next;
-
-          // hide the spinner when all the pages have been loaded
-          if (!url) {
-            document.querySelector("#after-list").style.display = "none";
-          }
         };
         // get the first set of results as soon as the page is initialised
         get();
 
-        // // at the bottom of the list get the next set of results and append them
-        // target.onInfiniteScroll = (done) => {
-        //   if (url) {
-        //     setTimeout(() => {
-        //       get();
-        //       done();
-        //     }, 200);
-        //   }
-        // };
+        // at the bottom of the list get the next set of results and append them
+        target.onInfiniteScroll = (done) => {
+          if (url) {
+            setTimeout(() => {
+              get();
+              done();
+            }, 200);
+          }
+        };
       }
     });
   </script>

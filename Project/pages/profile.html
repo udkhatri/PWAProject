@@ -1,4 +1,20 @@
 <ons-page id="profile">
+  <script>
+    const switchChange = () => {
+  const switchh = document.querySelector("#switch");
+  if (switchh.checked) {
+    document
+      .querySelector("#theme")
+      .setAttribute("href", "css/css/dark-onsen-css-components.css");
+    document.querySelector("#themeMeta").setAttribute("content", "#000");
+  } else {
+    document
+      .querySelector("#theme")
+      .setAttribute("href", "css/css/onsen-css-components.css");
+    document.querySelector("#themeMeta").setAttribute("content", "#fff");
+  }
+};
+  </script>
     <div class="center">
       <ons-list>
         <ons-list-item>
