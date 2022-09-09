@@ -18,7 +18,9 @@
 ### :camera: Screenshots
 
 <div align="center"> 
+  <a href="https://placehold.co/600x400?text=Your+Screenshot+here">
   <img src="https://placehold.co/600x400?text=Your+Screenshot+here" alt="screenshot" />
+  </a>
 </div>
 
 
@@ -47,8 +49,9 @@
     <li><a href="https://rapidapi.com/">Rapid API</a></li>
   </ul>
 </details>
+
 <!-- Features -->
-### :dart: Features
+## :dart: Features
 
 - User can use the application as a guest user or by siginng in to the app
 - Users can search for their favorite recipe and get nutrition fact as well as step by step guid to make that recipe
