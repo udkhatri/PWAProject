@@ -35,17 +35,18 @@
   </ul>
 </details>
 
-
+<details>
   <summary>BackEnd</summary>
   <ul>
     <li><a href="https://firebase.google.com/">Firebase</a></li>
   </ul>
-
+</details>
+<details>
 <summary>API</summary>
   <ul>
     <li><a href="https://rapidapi.com/">Rapid API</a></li>
   </ul>
-
+</details>
 <!-- Features -->
 ### :dart: Features
 
