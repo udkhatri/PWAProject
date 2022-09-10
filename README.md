@@ -15,12 +15,10 @@
 
 
 <!-- Screenshots -->
-### :camera: Screenshots
-
+### :camera: Demo video of the application
 <div align="center"> 
-  <a href="https://placehold.co/600x400?text=Your+Screenshot+here">
-  <img src="https://placehold.co/600x400?text=Your+Screenshot+here" alt="screenshot" />
-  </a>
+
+https://user-images.githubusercontent.com/34532828/189504621-5398ae1d-d280-42c2-adab-a600c9f24720.mp4
 </div>
 
 
